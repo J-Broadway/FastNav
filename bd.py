@@ -2,8 +2,7 @@ import os
 import csv
 import sys
 import argparse
-import subprocess
-
+import pyperclip
 # Sets d__path to directory path from directory name
 def d_path(name):
     global d__path
@@ -52,6 +51,5 @@ if args.open is not None:
 
 # If no tag is used, launch AHK script
 d_path(args.name)
-cmd = 'ahk.ahk \"{clipboard}'.format(clipboard=d__path)
-subprocess.Popen(cmd, shell=True)  # pass d__path as parameter to AHK script
+pyperclip.copy(d__path)
 print('\'{arg}\' copied to clipboard'.format(arg=args.name))

@@ -49,7 +49,7 @@ if args.open is not None:
     os.system('start .')
     exit()
 
-# If no tag is used, launch AHK script
+# If no tag is used, copy directory to clipboard
 d_path(args.name)
 pyperclip.copy(d__path)
 print('\'{arg}\' copied to clipboard'.format(arg=args.name))

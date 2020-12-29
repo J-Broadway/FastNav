@@ -1,19 +1,5 @@
 import csv
 
-#with open('test.csv', 'r', newline='') as csv_file:
-    # test = csv.writer(csv_file)
-    # test.writerow(['hey', 'there'])
-
-# file = open('test.csv', 'r')
-# lines = file.readlines()
-# for line in lines:
-#     if line == '\n':
-#         with open('test.csv', 'r', newline='') as csv_file:
-#             test = csv.writer(csv_file)
-#             test.writerow(['hey', 'there'])
-#     else:
-#         print('nope')
-
 # Add newline if there is no newline in file
 csv_file = open('test.csv', 'r')
 lines = csv_file.readlines()

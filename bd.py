@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 import csv
 import sys
 import argparse
@@ -32,17 +33,29 @@ def d_path(name):
 # Adds new directory to directories.csv
 def new_d(name, directory):
     # Add newline if there is no newline in file
-    csv_file = open('test.csv', 'r')
+    csv_file = open('directories.csv', 'r')
     lines = csv_file.readlines()
     for line in lines:
         if line.find('\n') < 0:
-            with open('test.csv', 'a', newline='') as csv_file:
+            with open('directories.csv', 'a', newline='') as csv_file:
                 add_enter = csv.writer(csv_file)
                 add_enter.writerow('')
     # If newline available append new directory to directories.csv
-    with open('test.csv', 'a', newline='') as csv_file:
+    with open('directories.csv', 'a', newline='') as csv_file:
         append = csv.writer(csv_file)
         append.writerow([name, directory])
+
+
+# Removes directory from directories.csv
+def delete_d(del_d):
+    df = pd.read_csv('directories.csv', index_col=0)
+    try:
+        df = df.drop(del_d)
+    except KeyError:
+        print('\'{name}\' not found'.format(name=del_d))
+        exit()
+    df.to_csv(r'directories.csv')
+    print('\'{name}\' successfully removed'.format(name=del_d))
 
 
 # List commands if -ls flag is used
@@ -85,7 +98,7 @@ if sys.argv[1] == '-d':
         delete_me = ' '.join(delete_me)
     else:
         delete_me = delete_me[0]
-
+    delete_d(delete_me)
     exit()
 # Create parser
 parser = argparse.ArgumentParser(description='Better Directory Variables')

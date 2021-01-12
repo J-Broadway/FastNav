@@ -1,12 +1,12 @@
+import init
+init.main()
+
 import os
 import pandas as pd
 import csv
 import sys
 import argparse
 import pyperclip
-
-import init
-init.main()
 
 
 # Sets d__path to directory path from directory name

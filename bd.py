@@ -58,67 +58,83 @@ def delete_d(del_d):
     print('\'{name}\' successfully removed'.format(name=del_d))
 
 
+# TODO: Edit the code below with the proper variables
+# Converts list into a string
+def str_convert(my_list):
+    if len(my_list) > 1:
+        # If list has more than 1 item, join as a string
+        my_list = ' '.join(my_list)
+    else:
+        my_list = my_list[0]
+    return my_list
+
 ########
 # End of definitions
 ########
 
-# List commands if -ls flag is used
-if sys.argv[1] == '-ls':
-    with open('directories.csv') as csv_file:
-        directories = csv.reader(csv_file)
-        next(csv_file)
-        for x, row in enumerate(directories, 1):
-            print(x, row)
-    exit()
 
-# If -a tag is used, prompt user to add a new directory and name
-if sys.argv[1] == '-a':
-    name = input('Add New Name: ')
-    directory = input('Directory Path: ')
-    while True:
-        print('{name}, {directory}'.format(name=name, directory=directory))
-        check = input('Is this correct? (Y/N): ')
-        check = check.upper()
-        if check == 'Y':
-            new_d(name, directory)
-            print(name, "added successfully")
-            break
-        if check == 'N':
-            print('Operation canceled')
-            break
-    exit()
+if __name__ == "__main__":
+    # List commands if -ls flag is used
+    if sys.argv[1] == '-ls':
+        with open('directories.csv') as csv_file:
+            directories = csv.reader(csv_file)
+            next(csv_file)
+            for x, row in enumerate(directories, 1):
+                print(x, row)
+        exit()
 
-# If -d tag is used, prompt user to delete directory
-if sys.argv[1] == '-d':
-    d_parser = argparse.ArgumentParser(description='Better Directory Variables')
-    d_parser.add_argument('-d', '--delete', type=str, nargs='+', help='Name of directory to delete')
-    d_args = d_parser.parse_args()
+    # If -a tag is used, prompt user to add a new directory and name
+    if sys.argv[1] == '-a':
+        a_parser = argparse.ArgumentParser(description='Better Directory Variables')
+        a_parser.add_argument('-a', '--add', type=str, nargs='+', help='Name of directory to delete')
+        a_args = a_parser.parse_args()
 
-    delete_me = d_args.delete
-    # Delete_me gets returned as a list. The below converts it into a string.
-    if len(delete_me) > 1:
-        # If -d has more than 1 argument, join as a string
-        delete_me = ' '.join(delete_me)
-    else:
-        delete_me = delete_me[0]
-    delete_d(delete_me)
-    exit()
-# Create parser
-parser = argparse.ArgumentParser(description='Better Directory Variables')
-parser.add_argument('-ls', '--list', type=int, nargs='?', const=1, help='List Ranges')
-parser.add_argument('-a', '--add', type=int, nargs='?', const=1, help='Add a new directory')
-parser.add_argument('name', type=str, metavar='', help='Name of the directory you\'d like to access')
-parser.add_argument('-o', '--open', type=int, nargs='?', const=1, help='Open directory in explorer window')
-args = parser.parse_args()
+        name = str_convert(a_args.add)
+        directory = input('Directory Path: ')
+        while True:
+            print('{name}, {directory}'.format(name=name, directory=directory))
+            check = input('Is this correct? (Y/N): ')
+            check = check.upper()
+            if check == 'Y':
+                new_d(name, directory)
+                print(name, "added successfully")
+                break
+            if check == 'N':
+                print('Operation canceled')
+                break
+        exit()
 
-# If -o tag is used, open directory in explorer window
-if args.open is not None:
+    # If -d tag is used, prompt user to delete directory
+    if sys.argv[1] == '-d':
+        d_parser = argparse.ArgumentParser(description='Better Directory Variables')
+        d_parser.add_argument('-d', '--delete', type=str, nargs='+', help='Name of directory to delete')
+        d_args = d_parser.parse_args()
+
+        delete_me = d_args.delete
+        # Delete_me gets returned as a list. The below converts it into a string.
+        if len(delete_me) > 1:
+            # If -d has more than 1 argument, join as a string
+            delete_me = ' '.join(delete_me)
+        else:
+            delete_me = delete_me[0]
+        delete_d(delete_me)
+        exit()
+    # Create parser
+    parser = argparse.ArgumentParser(description='Better Directory Variables')
+    parser.add_argument('-ls', '--list', type=int, nargs='?', const=1, help='List Ranges')
+    parser.add_argument('-a', '--add', type=int, nargs='?', const=1, help='Add a new directory')
+    parser.add_argument('name', type=str, metavar='', help='Name of the directory you\'d like to access')
+    parser.add_argument('-o', '--open', type=int, nargs='?', const=1, help='Open directory in explorer window')
+    args = parser.parse_args()
+
+    # If -o tag is used, open directory in explorer window
+    if args.open is not None:
+        d_path(args.name)
+        os.chdir(d__path)
+        os.system('start .')
+        exit()
+
+    # If no tag is used, copy directory to clipboard
     d_path(args.name)
-    os.chdir(d__path)
-    os.system('start .')
-    exit()
-
-# If no tag is used, copy directory to clipboard
-d_path(args.name)
-pyperclip.copy(d__path)
-print('\'{arg}\' copied to clipboard'.format(arg=args.name))
+    pyperclip.copy(d__path)
+    print('\'{arg}\' copied to clipboard'.format(arg=args.name))

@@ -1,31 +1,26 @@
 import pandas as pd
-import csv
 
 
-# Adds new directory to directories.csv
-def new_d(name, directory):
-    # Add newline if there is no newline in file
-    csv_file = open('test.csv', 'r')
-    lines = csv_file.readlines()
-    for line in lines:
-        if line.find('\n') < 0:
-            with open('test.csv', 'a', newline='') as csv_file:
-                add_enter = csv.writer(csv_file)
-                add_enter.writerow('')
-    # If newline available append new directory to directories.csv
-    with open('test.csv', 'a', newline='') as csv_file:
-        append = csv.writer(csv_file)
-        append.writerow([name, directory])
-
-
-# Removes directory from directories.csv
 def delete_d(del_d):
-    df = pd.read_csv('test.csv', index_col=0)
+    df = pd.read_csv('directories.csv', index_col=0)
     try:
-        df = df.drop(del_d)
+        # Prompt user if they want to delete directory
+        prompt_msg = df.loc[del_d].values.tolist()
+        prompt_msg.insert(0, del_d)
+        while True:
+            print(prompt_msg)
+            check = input('Do you wish to remove? (Y/N): ')
+            check = check.upper()
+            if check == 'Y':
+                df = df.drop(del_d)
+                df.to_csv(r'directories.csv')
+                print('\'{name}\' successfully removed'.format(name=del_d))
+                break
+            if check == 'N':
+                print('Operation canceled')
+                break
     except KeyError:
         print('\'{name}\' not found'.format(name=del_d))
         exit()
-    df.to_csv(r'test.csv')
-    print('\'{name}\' successfully removed'.format(name=del_d))
 
+delete_d('yo')

@@ -5,7 +5,6 @@ import sys
 import argparse
 import pyperclip
 
-
 # Sets d__path to directory path from directory name
 def d_path(name):
     global d__path
@@ -30,6 +29,7 @@ def d_path(name):
             exit()
 
 
+# TODO: Add functionality to handel duplicate names/overwrites
 # Adds new directory to directories.csv
 def new_d(name, directory):
     # Add newline if there is no newline in file
@@ -50,15 +50,26 @@ def new_d(name, directory):
 def delete_d(del_d):
     df = pd.read_csv('directories.csv', index_col=0)
     try:
-        df = df.drop(del_d)
+        # Prompt user if they want to delete directory
+        prompt_msg = df.loc[del_d].values.tolist()
+        prompt_msg.insert(0, del_d)
+        while True:
+            print(prompt_msg)
+            check = input('Do you wish to remove? (Y/N): ')
+            check = check.upper()
+            if check == 'Y':
+                df = df.drop(del_d)
+                df.to_csv(r'directories.csv')
+                print('\'{name}\' successfully removed'.format(name=del_d))
+                break
+            if check == 'N':
+                print('Operation canceled')
+                break
     except KeyError:
         print('\'{name}\' not found'.format(name=del_d))
         exit()
-    df.to_csv(r'directories.csv')
-    print('\'{name}\' successfully removed'.format(name=del_d))
 
 
-# TODO: Edit the code below with the proper variables
 # Converts list into a string
 def str_convert(my_list):
     if len(my_list) > 1:
@@ -68,9 +79,9 @@ def str_convert(my_list):
         my_list = my_list[0]
     return my_list
 
-########
-# End of definitions
-########
+# # # # # # # # # # #
+# End Of Functions  #
+# # # # # # # # # # #
 
 
 if __name__ == "__main__":
@@ -85,7 +96,7 @@ if __name__ == "__main__":
 
     # If -a tag is used, prompt user to add a new directory and name
     if sys.argv[1] == '-a':
-        a_parser = argparse.ArgumentParser(description='Better Directory Variables')
+        a_parser = argparse.ArgumentParser(description='FastNav Variables')
         a_parser.add_argument('-a', '--add', type=str, nargs='+', help='Name of directory to delete')
         a_args = a_parser.parse_args()
 
@@ -97,30 +108,25 @@ if __name__ == "__main__":
             check = check.upper()
             if check == 'Y':
                 new_d(name, directory)
-                print(name, "added successfully")
+                print('\'{name}\' added successfully'.format(name=name))
                 break
             if check == 'N':
                 print('Operation canceled')
                 break
         exit()
 
-    # If -d tag is used, prompt user to delete directory
-    if sys.argv[1] == '-d':
-        d_parser = argparse.ArgumentParser(description='Better Directory Variables')
-        d_parser.add_argument('-d', '--delete', type=str, nargs='+', help='Name of directory to delete')
+    # If -rm tag is used, prompt user to delete directory
+    if sys.argv[1] == '-rm':
+        d_parser = argparse.ArgumentParser(description='FastNav Variables')
+        d_parser.add_argument('-rm', '--remove', type=str, nargs='+', help='Name of directory to delete')
         d_args = d_parser.parse_args()
 
-        delete_me = d_args.delete
-        # Delete_me gets returned as a list. The below converts it into a string.
-        if len(delete_me) > 1:
-            # If -d has more than 1 argument, join as a string
-            delete_me = ' '.join(delete_me)
-        else:
-            delete_me = delete_me[0]
+        delete_me = str_convert(d_args.remove)
         delete_d(delete_me)
         exit()
+
     # Create parser
-    parser = argparse.ArgumentParser(description='Better Directory Variables')
+    parser = argparse.ArgumentParser(description='FastNav Variables')
     parser.add_argument('-ls', '--list', type=int, nargs='?', const=1, help='List Ranges')
     parser.add_argument('-a', '--add', type=int, nargs='?', const=1, help='Add a new directory')
     parser.add_argument('name', type=str, metavar='', help='Name of the directory you\'d like to access')

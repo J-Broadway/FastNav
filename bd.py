@@ -58,6 +58,10 @@ def delete_d(del_d):
     print('\'{name}\' successfully removed'.format(name=del_d))
 
 
+########
+# End of definitions
+########
+
 # List commands if -ls flag is used
 if sys.argv[1] == '-ls':
     with open('directories.csv') as csv_file:
@@ -84,7 +88,6 @@ if sys.argv[1] == '-a':
             break
     exit()
 
-# TODO: Figure out how to delete rows from a csv
 # If -d tag is used, prompt user to delete directory
 if sys.argv[1] == '-d':
     d_parser = argparse.ArgumentParser(description='Better Directory Variables')

@@ -91,14 +91,18 @@ def str_convert(my_list):
 if __name__ == "__main__":
     # List commands if -ls flag is used
     if sys.argv[1] == '-ls':
+        # If directories.csv is empty prompt user to add a new directory
         with open('directories.csv') as csv_file:
             directories = csv.reader(csv_file)
             next(csv_file)
-            # If directories.csv is empty prompt user to add a new directory
             check = sum(1 for row in directories)
             if check == 0:
                 print('Directories.csv is blank. Do \'fn -a\' to add directory')
                 exit()
+        # If directories.csv is not empty list directories
+        with open('directories.csv') as csv_file:
+            directories = csv.reader(csv_file)
+            next(csv_file)
             for x, row in enumerate(directories, 1):
                 print(x, row)
         exit()

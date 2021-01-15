@@ -6,7 +6,7 @@ from os import path
 
 
 # If directories.csv doesn't exist create it and add 'name,path'
-# Next, create 'Batch' folder
+# Next, create 'Batch' folder and '-fn.bat'
 # Next, install requirements.txt
 def main():
     if path.isfile('directories.csv') is True:
@@ -15,8 +15,6 @@ def main():
         with open('directories.csv', 'w', newline='') as csv_file:
             writer = csv.writer(csv_file, escapechar=' ', quoting=csv.QUOTE_NONE)
             writer.writerow(['name', 'path'])
-        # Create 'Batch' folder
-        os.mkdir('Batch')
         # Install requirements.txt
         subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
 

@@ -7,12 +7,18 @@ import csv
 import sys
 import argparse
 import pyperclip
+import subprocess
 
 
 # Returns directory path from directory name
 def d_path(name):
-    with open ('directories.csv') as csv_file:
+    with open('directories.csv') as csv_file:
         directories = csv.reader(csv_file)
+        # Grab sub folders
+        sub_folder = ''
+        if name.find('/') > 0 and name != '/':
+            sub_folder = name[name.find('/'):].replace('/', '\\')
+            name = name[0:name.find('/')]
         # Search for matching name in first column of directories.csv
         for row in directories:
             if name == row[0]:
@@ -24,7 +30,7 @@ def d_path(name):
                 if d__path.find('%HOMEPATH%') > 0:
                     from pathlib import Path
                     d__path = d__path.replace('%HOMEPATH%', str(Path.home()))
-                return d__path
+                return d__path + sub_folder
         # Return error if directory is not found
         print('Directory name \'{this}\' does not exist'.format(this=args.name))
         exit()
@@ -45,6 +51,14 @@ def new_d(name, directory):
     with open('directories.csv', 'a', newline='') as csv_file:
         append = csv.writer(csv_file)
         append.writerow([name, directory])
+
+
+# Creates .bat file in 'Batch' folder.
+def new_bat(name, directory):
+    mybat = open(r'Batch/{name}.bat'.format(name=name), 'w+')
+    mybat.write('''@echo off
+    cd {directory}'''.format(directory=directory))
+    mybat.close()
 
 
 # Removes directory from directories.csv
@@ -105,6 +119,7 @@ if __name__ == "__main__":
         exit()
 
     # If -a tag is used, prompt user to add a new directory and name
+    # Then, create .bat file
     if sys.argv[1] == '-a':
         a_parser = argparse.ArgumentParser(description='FastNav Variables')
         a_parser.add_argument('-a', '--add', type=str, nargs='+', help='Name of directory to delete')
@@ -140,15 +155,16 @@ if __name__ == "__main__":
     parser.add_argument('-ls', '--list', type=int, nargs='?', const=1, help='List directories')
     parser.add_argument('-a', '--add', type=int, nargs='?', const=1, help='Add a new directory')
     parser.add_argument('name', type=str, metavar='', help='Name of the directory you\'d like to access')
-    parser.add_argument('-o', '--open', type=int, nargs='?', const=1, help='Open directory in explorer window')
+    parser.add_argument('-c', '--copy', type=int, nargs='?', const=1, help='Copy directory to clipboard')
     args = parser.parse_args()
 
-    # If -o tag is used, open directory in explorer window
-    if args.open is not None:
-        os.chdir(d_path(args.name))
-        os.system('start .')
+    # If -c tag is used, copy directory to clipboard
+    if args.copy is not None:
+        pyperclip.copy(d_path(args.name))
+        print('\'{arg}\' copied to clipboard'.format(arg=args.name))
         exit()
 
-    # If no tag is used, copy directory to clipboard
-    pyperclip.copy(d_path(args.name))
-    print('\'{arg}\' copied to clipboard'.format(arg=args.name))
+    # If no tag is used, open directory in explorer window
+    os.chdir(d_path(args.name))
+    os.system('start .')
+    exit()

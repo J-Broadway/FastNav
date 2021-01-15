@@ -9,9 +9,8 @@ import argparse
 import pyperclip
 
 
-# Sets d__path to directory path from directory name
+# Returns directory path from directory name
 def d_path(name):
-    global d__path
     with open ('directories.csv') as csv_file:
         directories = csv.reader(csv_file)
         # Search for matching name in first column of directories.csv
@@ -25,12 +24,10 @@ def d_path(name):
                 if d__path.find('%HOMEPATH%') > 0:
                     from pathlib import Path
                     d__path = d__path.replace('%HOMEPATH%', str(Path.home()))
+                return d__path
         # Return error if directory is not found
-        try:
-            d__path
-        except NameError:
-            print('Directory name \'{this}\' does not exist'.format(this=args.name))
-            exit()
+        print('Directory name \'{this}\' does not exist'.format(this=args.name))
+        exit()
 
 
 # TODO: Add functionality to handel duplicate names/overwrites
@@ -148,12 +145,10 @@ if __name__ == "__main__":
 
     # If -o tag is used, open directory in explorer window
     if args.open is not None:
-        d_path(args.name)
-        os.chdir(d__path)
+        os.chdir(d_path(args.name))
         os.system('start .')
         exit()
 
     # If no tag is used, copy directory to clipboard
-    d_path(args.name)
-    pyperclip.copy(d__path)
+    pyperclip.copy(d_path(args.name))
     print('\'{arg}\' copied to clipboard'.format(arg=args.name))

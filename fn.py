@@ -7,7 +7,6 @@ import csv
 import sys
 import argparse
 import pyperclip
-import subprocess
 
 
 # Returns directory path from directory name
@@ -53,29 +52,27 @@ def new_d(name, directory):
         append.writerow([name, directory])
 
 
-# Creates .bat file in 'Batch' folder.
-def new_bat(name, directory):
-    mybat = open(r'Batch/{name}.bat'.format(name=name), 'w+')
-    mybat.write('''@echo off
-    cd {directory}'''.format(directory=directory))
-    mybat.close()
-
-
 # Removes directory from directories.csv
-def delete_d(del_d):
+def delete_d(del_d, mode=0):
     df = pd.read_csv('directories.csv', index_col=0)
     try:
-        # Prompt user if they want to delete directory
-        prompt_msg = df.loc[del_d].values.tolist()
-        prompt_msg.insert(0, del_d)
         while True:
-            print(prompt_msg)
-            check = input('Do you wish to remove? (Y/N): ')
-            check = check.upper()
+            check = ''
+            # If mode is 0, prompt user if they want to delete directory
+            if mode == 0:
+                prompt_msg = df.loc[del_d].values.tolist()
+                prompt_msg.insert(0, del_d)
+                print(prompt_msg)
+                check = input('Do you wish to remove? (Y/N): ')
+                check = check.upper()
+            # Otherwise is mode is 1, remove directory
+            if mode == 1:
+                check = 'Y'
             if check == 'Y':
                 df = df.drop(del_d)
                 df.to_csv(r'directories.csv')
-                print('\'{name}\' successfully removed'.format(name=del_d))
+                if mode == 0:
+                    print('\'{name}\' successfully removed'.format(name=del_d))
                 break
             if check == 'N':
                 print('Operation canceled')
@@ -119,13 +116,26 @@ if __name__ == "__main__":
         exit()
 
     # If -a tag is used, prompt user to add a new directory and name
-    # Then, create .bat file
     if sys.argv[1] == '-a':
         a_parser = argparse.ArgumentParser(description='FastNav Variables')
-        a_parser.add_argument('-a', '--add', type=str, nargs='+', help='Name of directory to delete')
+        a_parser.add_argument('-a', '--add', type=str, nargs='+', help='Name of directory to add')
         a_args = a_parser.parse_args()
-
         name = str_convert(a_args.add)
+
+        # Check name doesn't already exist
+        df = pd.read_csv('directories.csv', index_col=0)
+        exists = name in df.index
+        if exists is True:
+            print('Directory \'{name}\' already exists'.format(name=name))
+            overwrite = input('Overwrite? (Y/N): ')
+            overwrite = overwrite.upper()
+            while True:
+                if overwrite == 'Y':
+                    delete_d(name, 1)
+                    break
+                if overwrite == 'N':
+                    print('Operation Canceled')
+                    exit()
         directory = input('Directory Path: ')
         while True:
             print('{name}, {directory}'.format(name=name, directory=directory))

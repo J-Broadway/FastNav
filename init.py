@@ -6,7 +6,6 @@ from os import path
 
 
 # If directories.csv doesn't exist create it and add 'name,path'
-# Next, create 'Batch' folder and '-fn.bat'
 # Next, install requirements.txt
 def main():
     if path.isfile('directories.csv') is True:

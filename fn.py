@@ -35,7 +35,6 @@ def d_path(name):
         exit()
 
 
-# TODO: Add functionality to handel duplicate names/overwrites
 # Adds new directory to directories.csv
 def new_d(name, directory):
     # Add newline if there is no newline in file

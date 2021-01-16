@@ -163,17 +163,19 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='FastNav Variables')
     parser.add_argument('-ls', '--list', type=int, nargs='?', const=1, help='List directories')
     parser.add_argument('-a', '--add', type=int, nargs='?', const=1, help='Add a new directory')
-    parser.add_argument('name', type=str, metavar='', help='Name of the directory you\'d like to access')
+    parser.add_argument('name', type=str, metavar='', nargs='+', help='Name of the directory you\'d like to access')
     parser.add_argument('-c', '--copy', type=int, nargs='?', const=1, help='Copy directory to clipboard')
     args = parser.parse_args()
+    # This will convert directory names with spaces (IE: 'my desktop') to a string instead of list
+    name = str_convert(args.name)
 
     # If -c tag is used, copy directory to clipboard
     if args.copy is not None:
-        pyperclip.copy(d_path(args.name))
-        print('\'{arg}\' copied to clipboard'.format(arg=args.name))
+        pyperclip.copy(d_path(name))
+        print('\'{arg}\' copied to clipboard'.format(arg=name))
         exit()
 
     # If no tag is used, open directory in explorer window
-    os.chdir(d_path(args.name))
+    os.chdir(d_path(name))
     os.system('start .')
     exit()

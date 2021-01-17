@@ -5,6 +5,7 @@ import os
 import pandas as pd
 import csv
 import sys
+import subprocess
 import argparse
 import pyperclip
 
@@ -90,6 +91,12 @@ def str_convert(my_list):
         my_list = my_list[0]
     return my_list
 
+
+# Checks if executable
+def is_exe(exe_path):
+    return os.path.isfile(exe_path) and os.access(exe_path, os.X_OK)
+
+
 # # # # # # # # # # #
 # End Of Functions  #
 # # # # # # # # # # #
@@ -170,13 +177,16 @@ if __name__ == "__main__":
     name = str_convert(args.name)
 
     # If -c tag is used, copy directory to clipboard
-    # Can you see me?
     if args.copy is not None:
         pyperclip.copy(d_path(name))
         print('\'{arg}\' copied to clipboard'.format(arg=name))
         exit()
 
-    # If no tag is used, open directory in explorer window
-    os.chdir(d_path(name))
-    os.system('start .')
-    exit()
+    # If no tag is used, execute file, or open program in explorer window
+    exec_check = is_exe(d_path(name))
+    if exec_check is True:
+        os.startfile(d_path(name), 'open')
+    else:
+        os.chdir(d_path(name))
+        os.system('start .')
+        exit()

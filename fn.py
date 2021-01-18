@@ -177,6 +177,7 @@ if __name__ == "__main__":
     name = str_convert(args.name)
 
     # If -c tag is used, copy directory to clipboard
+    # Can you see me?
     if args.copy is not None:
         pyperclip.copy(d_path(name))
         print('\'{arg}\' copied to clipboard'.format(arg=name))

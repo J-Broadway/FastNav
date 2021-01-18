@@ -31,10 +31,10 @@ def requirements():
     for item in dependencies:
         try:
             pkg_resources.require(item)
-            # If requirement is already installed attribute value 0
+            # If requirement is already installed append value 0
             install_list.append([item, 0])
         except:
-            # If requirement is NOT installed attribute value 1
+            # If requirement is NOT installed append value 1
             install_list.append([item, 1])
             install_prompt.append(item)
     check = sum(x[1] for x in install_list)
@@ -47,7 +47,7 @@ def requirements():
                 for item in install_list:
                     if item[1] == 1:
                         requirement = item[0]
-                        print('Installing', requirement)
+                        print('Installing', requirement, '(This may take awhile...)')
                         subprocess.check_call([sys.executable, '-m', 'pip', 'install', requirement])
                 break
             if answer == 'N':

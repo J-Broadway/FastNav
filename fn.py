@@ -5,7 +5,6 @@ import os
 import pandas as pd
 import csv
 import sys
-import subprocess
 import argparse
 import pyperclip
 

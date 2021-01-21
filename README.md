@@ -6,4 +6,4 @@ Navigate Windows file directory faster with FastNav
 
 Click `Code` and download repository as `.zip` Unzip to file location of your choosing.
 
-To install right click `setup.py` as click `Run as Administrator`
+To install right click `setup.bat` as click `Run as Administrator`

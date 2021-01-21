@@ -18,7 +18,7 @@ def main():
             bat.write(r'''@echo off
 set "var=%cd%"
 cd {}
-fn.py %*
+python fn.py %*
 cd %var%
 '''.format(cwd))
             print('Creating \'fn.bat\'...')

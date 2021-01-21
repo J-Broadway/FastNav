@@ -7,11 +7,11 @@ if not exist "%var%/temp" mkdir temp
 echo %PATH%> temp/fn_temp.txt
 
 :: Run setup.py
-setup.py > temp/setup_return.txt
+python setup.py > temp/setup_return.txt
 set /p OUT=<temp/setup_return.txt
 IF "%OUT%" == "0" (
     echo FastNav already added to PATH... Skipping
-    init.py
+    python init.py
     pause
     )
 IF "%OUT%" == "1" (
@@ -21,7 +21,7 @@ IF "%OUT%" == "1" (
         echo:
         echo Do 'fn -h' for help 'fn -docs' for documentation
         echo:
-        init.py
+        python init.py
         pause
     ) || (
         echo Please run setup.bat as administrator

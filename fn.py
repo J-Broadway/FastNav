@@ -102,6 +102,10 @@ def is_exe(exe_path):
 
 
 if __name__ == "__main__":
+    # If no command is used return error
+    if len(sys.argv) == 1:
+        print('Error: No arguments. Do \'fn -h\' for help.')
+        exit()
     # List commands if -ls flag is used
     if sys.argv[1] == '-ls':
         # If directories.csv is empty prompt user to add a new directory

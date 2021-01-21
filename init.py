@@ -3,14 +3,30 @@ import csv
 import subprocess
 import pkg_resources
 from os import path
+from os import mkdir
+from os import getcwd
 
 
-# If directories.csv doesn't exist create it and add 'name,path'
-# Next, check if requirements are satisfied
 def main():
+    # If fn.bat doesn't exist create it
+    if path.isdir('bat') is True:
+        pass
+    else:
+        cwd = getcwd()
+        mkdir('bat')
+        with open('bat/fn.bat', 'w') as bat:
+            bat.write(r'''@echo off
+set "var=%cd%"
+cd {}
+fn.py %*
+cd %var%
+'''.format(cwd))
+            print('Creating \'fn.bat\'...')
+    # If directories.csv doesn't exist create it and add 'name,path'
     if path.isfile('directories.csv') is True:
         pass
     else:
+        print('Creating \'directories.csv\'...')
         with open('directories.csv', 'w', newline='') as csv_file:
             writer = csv.writer(csv_file, escapechar=' ', quoting=csv.QUOTE_NONE)
             writer.writerow(['name', 'path'])
@@ -20,6 +36,7 @@ def main():
         pkg_resources.require(dependencies)
     except:
         requirements()
+    # Check if fn.bat exists
 
 
 # TODO: variable 'dependencies' should read off 'requirements.txt'
